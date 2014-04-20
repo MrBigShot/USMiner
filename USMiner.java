@@ -160,7 +160,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			final SceneObject Ores[] = SceneObjects.getNearest(oreID);
 			final SceneObject Ore = Ores[0];
 			
-			if (Ore.isOnScreen() && Players.getLocal().getAnimation() == -1) {
+			if (Ore.isOnScreen() && Players.getLocal().getAnimation() == -1 && !Players.getLocal().isWalking()) {
 				Ore.interact("Mine");
 				Time.sleep(2000);
 			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() != -1){
