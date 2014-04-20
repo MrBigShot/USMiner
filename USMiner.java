@@ -49,8 +49,8 @@ public class USMiner extends Script implements Paintable, MessageListener {
 	public int oreCount;
 	public int cashMade;
 	private final Color color1 = new Color(255, 255, 255);
-    private final Font font1 = new Font("Arial", 0, 20);
-    private final Font font2 = new Font("Arial", 0, 14);
+    	private final Font font1 = new Font("Arial", 0, 20);
+	private final Font font2 = new Font("Arial", 0, 14);
 	private final Color color2 = new Color(225, 50, 55);
 	private final Timer RUNTIME = new Timer();
 	
