@@ -66,7 +66,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			oreID = 2096;
 		else if (lvl >= 55 && lvl < 70)
 			oreID = 2102;
-		else if (lvl >= 75 && lvl < 85)
+		else if (lvl >= 70 && lvl < 85)
 			oreID = 2104;
 		else if (lvl >=85)
 			oreID = 2106;
