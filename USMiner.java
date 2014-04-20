@@ -198,6 +198,8 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			} else if (Interfaces.getOpenInterfaceId() == 5292) {
 				Menu.interact("Deposit carried tems", new Point(400, 300));
 				Time.sleep(1000);
+			} else if (Banker == null) {
+				Time.sleep(200);
 			}
 			Time.sleep(100);
 		}
