@@ -164,7 +164,10 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			final SceneObject Ore = Ores[0];
 			Time.sleep(500);
 			if (Ore.isOnScreen() && Players.getLocal().getAnimation() == -1 && !Players.getLocal().isWalking()) {
-				Ore.interact("Mine");
+				try {
+					Ore.interact("Mine");
+				} catch(Exception e) {
+				}
 				Time.sleep(2000);
 			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() == -1){
 				Tile Rock = Ore.getLocation();
@@ -196,13 +199,20 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			final Npc Banker = Booths[0];
 
 			if (Interfaces.getOpenInterfaceId() != 5292 && Banker != null) {
+				try {
 				Npcs.getNearest(953)[0].interact("");
+				} catch(Exception e) {
+					
+				}
 				Time.sleep(200);
 			} else if (Interfaces.getOpenInterfaceId() == 5292) {
-				//Menu.interact("Deposit carried tems", new Point(400, 300));
 				Time.sleep(500);
 				for (Item i : Inventory.getItems(oreIDs)) {
-					i.interact("Store All");
+					try {
+						i.interact("Store All");
+					} catch(Exception e) {
+						break;
+					}
 				}
 				Time.sleep(1000);
 			} else if (!Banker.isOnScreen()) {
