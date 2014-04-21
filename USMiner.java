@@ -34,6 +34,7 @@ import org.rev317.api.methods.Npcs;
 import org.rev317.api.methods.Players;
 import org.rev317.api.methods.SceneObjects;
 import org.rev317.api.methods.Skill;
+import org.rev317.api.wrappers.hud.Item;
 import org.rev317.api.wrappers.interactive.Npc;
 import org.rev317.api.wrappers.scene.Area;
 import org.rev317.api.wrappers.scene.SceneObject;
@@ -53,6 +54,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 	public int cashMade;
 	public int currentLVL;
 	public int oreChoice = 1;
+	public int[] oreIDs = {436, 438, 440, 453, 444, 449, 447, 451};
 	public boolean guiWait = true;
 	Gui g = new Gui();
 	private final Color color1 = new Color(255, 255, 255);
@@ -212,10 +214,14 @@ public class USMiner extends Script implements Paintable, MessageListener {
 				Npcs.getNearest(953)[0].interact("");
 				Time.sleep(200);
 			} else if (Interfaces.getOpenInterfaceId() == 5292) {
-				Menu.interact("Deposit carried tems", new Point(400, 300));
+				//Menu.interact("Deposit carried tems", new Point(400, 300));
+				Time.sleep(500);
+				for (Item i : Inventory.getItems(oreIDs)) {
+					i.interact("Store All");
+				}
 				Time.sleep(1000);
-			} else if (Banker == null) {
-				Time.sleep(200);
+			} else if (!Banker.isOnScreen()) {
+				Banker.getLocation().clickMM();
 			}
 			Time.sleep(100);
 		}
