@@ -169,7 +169,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 				} catch(Exception e) {
 				}
 				Time.sleep(2000);
-			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() == -1){
+			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() == -1 && !Players.getLocal().isWalking()){
 				Tile Rock = Ore.getLocation();
 				Rock.clickMM();
 				Time.sleep(200);
