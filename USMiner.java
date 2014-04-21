@@ -3,11 +3,14 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.parabot.core.ui.components.LogArea;
 import org.parabot.environment.api.interfaces.Paintable;
 import org.parabot.environment.api.utils.Time;
 import org.parabot.environment.api.utils.Timer;
@@ -29,11 +31,9 @@ import org.rev317.api.events.listeners.MessageListener;
 import org.rev317.api.methods.Camera;
 import org.rev317.api.methods.Interfaces;
 import org.rev317.api.methods.Inventory;
-import org.rev317.api.methods.Menu;
 import org.rev317.api.methods.Npcs;
 import org.rev317.api.methods.Players;
 import org.rev317.api.methods.SceneObjects;
-import org.rev317.api.methods.Skill;
 import org.rev317.api.wrappers.hud.Item;
 import org.rev317.api.wrappers.interactive.Npc;
 import org.rev317.api.wrappers.scene.Area;
@@ -58,25 +58,33 @@ public class USMiner extends Script implements Paintable, MessageListener {
 	public boolean guiWait = true;
 	Gui g = new Gui();
 	private final Color color1 = new Color(255, 255, 255);
-	private final Font font1 = new Font("Arial", 0, 20);
 	private final Font font2 = new Font("Arial", 0, 14);
-	private final Color color2 = new Color(225, 50, 55);
 	private final Timer RUNTIME = new Timer();
+	public static Image img1;
 
 	@Override
 	public boolean onExecute() {
 		g.setVisible(true);
+		img1 = getImage("http://i.imgur.com/EVlgr5a.png");
 		while (guiWait) {
 			sleep(500);
 		}
-		
+		Camera.setRotation(45);
 		strategies.add(new Walk());
 		strategies.add(new Mine());
 		strategies.add(new BankOre());
 		provide(strategies);
 		return true;
 	}
-
+	
+	public static Image getImage(String url) {
+		try {
+			return ImageIO.read(new URL(url));
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
 	private boolean atMine() {
 		if (mine.contains(Players.getLocal().getLocation())) {
 			return true;
@@ -95,16 +103,12 @@ public class USMiner extends Script implements Paintable, MessageListener {
 	public void paint(Graphics arg0) {
 
 		Graphics2D g = (Graphics2D) arg0;
-		g.setColor(new Color(0f, 0f, 0f, .5f));
-		g.fillRect(4, 23, 150, 65);
-		g.setColor(color2);
-		g.setFont(font1);
-		g.drawString("USMiner", 6, 43);
+		g.drawImage(img1, 4, 23, null);
 		g.setFont(font2);
 		g.setColor(color1);
-		g.drawString("Ores Mined: " + oreCount, 6, 57);
-		g.drawString("Cash Made: " + cashMade, 6, 70);
-		g.drawString("Runtime: " + RUNTIME, 6, 83);
+		g.drawString("" + oreCount, 82, 57);
+		g.drawString("" + cashMade, 82, 70);
+		g.drawString("" + RUNTIME, 82, 83);
 	}
 
 	public void onFinish() {
@@ -153,27 +157,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 					&& atMine()
 					&& Ore != null;
 		}
-
-	/*	@Override
-		public void execute() {
-
-			final SceneObject[] Ores = SceneObjects.getNearest(oreID);
-			final SceneObject Ore = Ores[0];
-			if (!Inventory.isFull() 
-					&& Ore != null 
-					&& Players.getLocal().getAnimation() == -1 
-					&& !Players.getLocal().isWalking()) {
-				Time.sleep(500);
-				if (!Inventory.isFull() && Ore.isOnScreen() && Players.getLocal().getAnimation() == -1) {
-					Ore.interact("");
-					Time.sleep(2000);
-				} else {
-					Tile Rock = Ore.getLocation();
-					Rock.clickMM();
-					Time.sleep(500);
-				}
-			}
-		}*/
+		
 		@Override
 		public void execute() {
 			final SceneObject Ores[] = SceneObjects.getNearest(oreID);
@@ -182,7 +166,7 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			if (Ore.isOnScreen() && Players.getLocal().getAnimation() == -1 && !Players.getLocal().isWalking()) {
 				Ore.interact("Mine");
 				Time.sleep(2000);
-			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() != -1){
+			} else  if (!Ore.isOnScreen() && Players.getLocal().getAnimation() == -1){
 				Tile Rock = Ore.getLocation();
 				Rock.clickMM();
 				Time.sleep(200);
@@ -201,7 +185,8 @@ public class USMiner extends Script implements Paintable, MessageListener {
 			final Npc Booths[] = Npcs.getNearest(953);
 			final Npc Banker = Booths[0];
 			return (Inventory.isFull() 
-					&& bank.contains(Players.getLocal().getLocation()));
+					&& atBank()
+					&& Banker != null);
 		}
 
 		@Override
